@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang = "ja">
+
+<head>
+<meta charset ="utf-8">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" type="text/css" href="CSS For NumberGame.css">
+<title>NumberGame</title>
+</head>
+
+<body>
+<header>
+<h2>すうじあてげーむ</h2>
+</header>
+
+<section>
+<p>できるだけ少ない回数で数字を当ててね</p>
+<p>説明:1~10000の数字がランダムで生成されるよ。あてずっぽであててね。</p>
+<p>「スタート」を押して、出てくるやつに数字をいれて「ok」を押してね</p>
+<p><aside>おねがい：入力は半角数字にしてね</aside></p>
+<input type = button value ="スタート" onClick="start()">
+</section>
+<hr>
+<br>
+
+<section>
+<span id="countStr"></span>
+<span id ="countNum"></span>
+<div id="input"></div>
+<div id="inNum"></div>
+<div id="hint1"></div>
+<div id="hint2"></div>
+</section>
+
+
+<hr>
+<footer><small>
+&copy; T.S All Rights Reserved.
+</small></footer>
+
+<script>
+/*イベントリスナー追加(Enterキー)*/
+document.addEventListener("keydown", e =>{
+	if(13 == e.keyCode && (!isStarted)){
+		start();
+	}else if(13 == e.keyCode){
+		check();
+	}
+});
+
+/*答え、試行回数*/
+let answer , count;
+/*開始・終了フラグ*/
+let isStarted = false;
+/*最小値・最大値*/
+let min = "?";
+let max = "?";
+
+/*起動メソッド*/
+function start(){
+	console.log("start");
+	/*数字とか初期化*/
+	isStarted = true;
+	answer = Math.floor(Math.random() * 10000 + 1);
+	console.log("answer:" + answer);
+	count = 0;
+
+	/*表示を初期化*/
+	document.getElementById("countStr").innerHTML = "試行回数：";
+	document.getElementById("countNum").innerHTML = count;
+	document.getElementById("input").innerHTML = "<input type=\"text\" id=\"in\" style=\"text-align:right\" pattern=\"\d*\"> <input type=\"button\" value=\"ok\" onClick=\"check()\"> ";
+	document.getElementById("inNum").innerHTML = "";
+	document.getElementById("hint1").innerHTML = "";
+	document.getElementById("hint2").innerHTML = "";
+}
+
+/*入力チェック*/
+function check(){
+	//エラーメッセージの初期化・入力表示
+	document.getElementById("inNum").innerHTML = "";
+	document.getElementById("inNum").innerHTML = "にゅうりょく:" + document.getElementById("in").value;
+
+	let inNum = document.getElementById("in").value - 0;
+	console.log("check:" + inNum);
+
+	/*テキストフォームをクリア*/
+	document.getElementById("in").value = "";
+
+	/*入力チェック*/
+	if( !isNaN(inNum) && 0<inNum && inNum<10001){
+		document.getElementById("countNum").innerHTML = ++count;
+		judge(inNum);
+	}else if(isNaN(inNum)){
+		document.getElementById("inNum").innerHTML = "<err>エラー：すうじをにゅうりょくしてね</err>";
+		console.log("can not judge:NaN");
+	}else if(inNum < 1 || 10000 < inNum){
+		document.getElementById("inNum").innerHTML = "<err>エラー：1~10000の間ですうじをにゅうりょくしてね</err>";
+		console.log("can not judge:out of range");
+	}
+}
+
+/*判定*/
+function judge(inNum){
+	console.log("judging...");
+
+	if(inNum == answer){
+		/*あたり*/
+		document.getElementById("hint1").innerHTML = "おめでとう！";
+		document.getElementById("hint2").innerHTML = "せいかいは" + answer + "でした";
+		isStarted = false;
+		console.log("judge:true");
+	}else if(inNum < answer){
+		/*もっとおっきい*/
+		if(min < inNum || min == "?"){min = inNum;}
+		document.getElementById("hint1").innerHTML = "もっとおっきいよ";
+		document.getElementById("hint2").innerHTML = min + "よりおっきくて" + max + "よりちっちゃい";
+		console.log("judge:false,more bigger");
+	}else{
+		/*もっとちっちゃい*/
+		if(inNum < max || max == "?"){max = inNum;}
+		document.getElementById("hint1").innerHTML = "もっとちっちゃいよ";
+		document.getElementById("hint2").innerHTML = min + "よりおっきくて" + max + "よりちっちゃい";
+		console.log("judge:false,more smaller");
+	}
+}
+</script>
+
+</body>
+</html>

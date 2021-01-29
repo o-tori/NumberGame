@@ -1,0 +1,24 @@
+body{
+	text-align:center;
+	font-family: '游ゴシック';
+}
+header{
+	font-style: italic;
+}
+aside{
+	color:gray
+}
+div{
+	/* margin:20px; */
+	height: 40px;
+}
+#input,#inNum{
+	color:lightblue
+}
+err{
+	color:red
+}
+
+footer{
+	color:lightgray;
+}
